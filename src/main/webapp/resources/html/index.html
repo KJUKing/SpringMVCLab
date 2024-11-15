@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>SpringMVCLab</title>
 </head>
+
 <body>
 <h2> ** SpringMVC tutorial ** </h2>
 <h4>
@@ -11,19 +12,32 @@
 </h4>
 <ul>
 	<li>
-		case01 : <a>컨트롤러 bean 등록과 핸들러 메소드의 request 매핑</a>
+		case01 : <a>컨트롤러 bean 등록과 핸들러 메소드의 request 매핑 : @RequestMapping 계열(HandlerMapping)</a>
 	</li>
 	<li>
-		case02 : <a>핸들러 메소드에서 request header[cookie] 처리</a>
+		case02 : <a>핸들러 메소드에서 request header[cookie] 처리 : @RequestHeader(HandlerAdapter)</a>
 	</li>
 	<li>
-		case03 : <a>컨트롤러에서 뷰를 사용하는 방법(ViewResolver 활용)</a>
+		case03 : <a>컨트롤러에서 뷰를 사용하는 방법(ViewResolver 활용)
+					ContentNegotiatingViewResolver(default json view) accept 헤더를 기준으로 content-type 결정
+					TilesViewResolver(tiles-configurer 로 definition설정 파일 로딩)
+						: logical view name --> definition name
+					InternalResourceViewResolver : prefix + logical view name + suffix --> forwarding</a>
 	</li>
 	<li>
-		case04 : <a>컨트롤러에서 뷰로 데이터 전달 방법(Scope 활용 케이스)</a>
+		case04 : <a>컨트롤러에서 뷰로 데이터 전달 방법(Scope 활용 케이스, HandlerAdapter)
+					Model : Call by reference 방식으로 모델 전달
+					ModelAndView : return Value로 모델과 뷰에 대한 정보 전달
+					ModelAttribute :
+						- 메소드에 선언 : 해당 메소드는 핸들러 메소드보다 먼저 실행되고, 반환값이 모델에 추가된다
+						- 핸들러 메소드 아규먼트(객체형)에 선언 : 해당 아규먼트는 모델에 추가됨.(생략가능)
+				</a>
 	</li>
 	<li>
-		case05 : <a>컨트롤러에서 흐름 제어 방식(forward, redirect)</a>
+		case05 : <a>컨트롤러에서 흐름 제어 방식(forward, redirect)
+				Model : forward로 이동하거나, controller에서 view로 모델 전달하는 용도
+				RedirectAttributes : flashAttribute 전달용도(redirect이동케이스 )
+				</a>
 	</li>
 	<li>
 		case06 : <a>핸들러 메소드에서 request parameter 처리</a>

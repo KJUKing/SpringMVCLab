@@ -9,6 +9,7 @@
         <log4j-api.version>2.24.1</log4j-api.version>
         <org.slf4j-version>2.0.16</org.slf4j-version>
         <org.springframework-version>5.3.39</org.springframework-version>
+        <com.fasterxml.jackson-version>2.18.1</com.fasterxml.jackson-version>
     </properties>
     <build>
         <finalName>ws03</finalName>
@@ -110,7 +111,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.18.1</version>
+            <version>${com.fasterxml.jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${com.fasterxml.jackson-version}</version>
         </dependency>
         <!--		Java Bean 지원-->
         <dependency>

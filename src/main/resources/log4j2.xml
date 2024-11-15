@@ -23,7 +23,8 @@
         <Logger name="kr.or.ddit" level="INFO"/>
         <Logger name="jdbc.sqltiming" level="DEBUG"/>
         <Logger name="jdbc.resultsettable" level="DEBUG"/>
-        <Logger name="org.springframework" level="DEBUG"/>
+        <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.springframework.web" level="DEBUG"/>
         <Logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="TRACE"/>
     </Loggers>
 </Configuration>
