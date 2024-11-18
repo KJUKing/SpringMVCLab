@@ -15,4 +15,8 @@
     <context:component-scan base-package="kr.or.ddit.mbti">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
+
+    <context:component-scan base-package="kr.or.ddit.props">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 </beans>

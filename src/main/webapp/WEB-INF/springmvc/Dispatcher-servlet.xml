@@ -15,7 +15,14 @@
 
     <mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
 
-    <mvc:annotation-driven></mvc:annotation-driven>
+<!--    HandlerMapping, HandlerAdapter, Validator를 자동 등록함-->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <constructor-arg name="objectMapper" ref="objectMapper" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
     <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean" id="objectMapper">
         <property name="featuresToDisable">

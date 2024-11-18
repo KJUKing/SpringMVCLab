@@ -1,9 +1,8 @@
 package kr.or.ddit.mbti.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import kr.or.ddit.mbti.service.MbtiService;
 import kr.or.ddit.vo.MbtiVO;
-import lombok.Data;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,8 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 /**
  * /mbti Get
@@ -22,7 +22,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * /mbti/{mtType} DELETE
  */
 
-@RequestMapping(value = "/mbti", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/mbti"
+        , produces = MediaType.APPLICATION_JSON_VALUE
+        , consumes = MediaType.APPLICATION_JSON_VALUE
+)
 @Controller
 public class MbtiController {
 
@@ -30,33 +33,39 @@ public class MbtiController {
     private MbtiService service;
 
     @GetMapping
-    public void list(Model model) {
-        model.addAttribute("list", service.readMbtiList());
+    @ResponseBody
+    public List<MbtiVO> list() {
+        return service.readMbtiList();
     }
 
     @GetMapping("{mtType}")
-    public void single(@PathVariable String mtType, Model model) {
+    @ResponseBody
+    public MbtiVO single(@PathVariable String mtType, Model model) {
         try{
+//            model.addAttribute("message", "요청처리성공");
             if (!model.containsAttribute("mbti")) {
-                model.addAttribute("mbti", service.readMbti(mtType));
+                return service.readMbti(mtType);
+            } else {
+                return (MbtiVO) model.getAttribute("mbti");
             }
         }catch (RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
     }
 
-    @PostMapping
-    public String insert(@ModelAttribute("mbti") MbtiVO mbti, RedirectAttributes redirectAttributes) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String insert(@RequestBody MbtiVO mbti, RedirectAttributes redirectAttributes) {
         service.createMbti(mbti);
         redirectAttributes.addFlashAttribute("mbti", mbti);
         return "redirect:/mbti"+mbti.getMtType();
     }
 
-    @PutMapping("{mtType}")
-    public void update(@ModelAttribute("mbti") MbtiVO mbti, Model model) {
+    @PutMapping(value = "{mtType}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void update(@RequestBody MbtiVO mbti, Model model) {
         service.modifyMbti(mbti);
         model.addAttribute("success", true);
+        model.addAttribute("mbti", mbti);
     }
 
     @DeleteMapping("{mtType}")
