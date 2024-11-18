@@ -1,94 +1,86 @@
 /**
  *
  */
-class MbtiFetch {
-    constructor(baseURI) {
+class MbtiFetch{
+    constructor(baseURI){
         this.baseURI = baseURI;
         this.headers = {
-            accept: "application/json"
+            accept:"application/json"
         }
     }
-
-    async selectList() {
+    async selectList(){
         let resp = await fetch(this.baseURI, {
-            headers: this.headers
+            headers:this.headers
         });
-        if (resp.ok) {
+        if(resp.ok){
             return resp.json();
-        } else {
+        }else{
             throw new Error(`상태코드 : ${resp.status}`);
         }
     }
-
-    async selectOne(mtType) {
+    async selectOne(mtType){
         let resp = await fetch(`${this.baseURI}/${mtType}`, {
-            headers: this.headers
+            headers:this.headers
         });
-        if (resp.ok) {
+        if(resp.ok){
             return resp.json();
-        } else {
+        }else{
             throw new Error(`상태코드 : ${resp.status}`);
         }
     }
 
-    formDataToJson(formData) {
+    formDataToJson(formData){
         let jsonObj = {};
-        for (let key of formData.keys()) {
+        for(let key of formData.keys()){
             let value = formData.get(key);
             jsonObj[key] = value;
         }
-        return jsonObj
+        return JSON.stringify(jsonObj);
     }
 
-    async insert(formData) {
-
-        //이건 깊은복사 스프레드구문(전개구문)
-        let headers = {...this.headers, "content-type": "application/json"};
-
-        let body = JSON.stringify(jsonObj);
+    async insert(formData){
+        let headers = {...this.headers, "content-type":"application/json"};
+        //headers.accept = this.headers.accept;
 
         let resp = await fetch(this.baseURI, {
-            method: "post",
-            headers: headers,
-            body: this.formDataToJson(formData)
+            method:"post",
+            headers:headers,
+            body : this.formDataToJson(formData)
         });
-        if (resp.ok) {
+        if(resp.ok){
             return resp.json();
-        } else {
+        }else{
             throw new Error(`상태코드 : ${resp.status}`);
         }
     }
-
-    async update(mtType, formData) {
+    async update(mtType, formData){
         let resp = await fetch(`${this.baseURI}/${mtType}`, {
-            method: "put",
-            headers: {
-                ...this.headers,
-                "Content-Type": "application/json"
+            method:"put",
+            headers:{
+                ...this.headers
+                , "content-type" : "application/json"
             },
-            body: this.formDataToJson(formData)
+            body : this.formDataToJson(formData)
         });
-        if (resp.ok) {
+        if(resp.ok){
             return resp.json();
-        } else {
+        }else{
             throw new Error(`상태코드 : ${resp.status}`);
         }
     }
-
-    async delete(mtType) {
+    async delete(mtType){
         let resp = await fetch(`${this.baseURI}/${mtType}`, {
-            method: "delete"
-            , headers: this.headers
+            method:"delete"
+            , headers:this.headers
         });
-        if (resp.ok) {
+        if(resp.ok){
             return resp.json();
-        } else {
+        }else{
             throw new Error(`상태코드 : ${resp.status}`);
         }
     }
 }
-
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async ()=>{
     const select = document.querySelector('[name="mbti"]');
     const modelEl = document.querySelector('#exampleModal');
     const updateForm = document.querySelector("#update-form");
@@ -98,50 +90,50 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let mbtiFetch = new MbtiFetch("../../mbti");
 
-    select.addEventListener("dataload", async (e) => {
+    select.addEventListener("dataload", async (e)=>{
         let mbtiList = await mbtiFetch.selectList();
-        e.target.innerHTML = mbtiList.map(m => `<option value="${m.mtType}">${m.mtTitle}</option>`)
+        e.target.innerHTML = mbtiList.map(m=>`<option value="${m.mtType}">${m.mtTitle}</option>`)
             .join("\n");
     });
 
     select.dispatchEvent(new Event("dataload"));
 
 //		EDD(Event-Driven-Development)
-    modelEl.addEventListener("show.bs.modal", async (e) => {
+    modelEl.addEventListener("show.bs.modal", async (e)=>{
         let mtType = e.relatedTarget.value;
         let mbti = await mbtiFetch.selectOne(mtType);
 //		updateForm.mtType = mbti.mtType;
-        for (let prop in mbti) {
-            if (updateForm[prop])
+        for(let prop in mbti){
+            if(updateForm[prop])
                 updateForm[prop].value = mbti[prop];
         }
     });
-    modelEl.addEventListener("hidden.bs.modal", async (e) => {
+    modelEl.addEventListener("hidden.bs.modal", async (e)=>{
         updateForm.reset();
     });
 
-    select.addEventListener("change", async (e) => {
+    select.addEventListener("change", async (e)=>{
         myModal.show(e.target);
     });
-    updateForm.addEventListener("submit", async (e) => {
+    updateForm.addEventListener("submit", async (e)=>{
         e.preventDefault();
         let formData = new FormData(e.target);
-        let success = await mbtiFetch.update(formData.get("mtType"), formData);
-        if (success) {
+        let {success} = await mbtiFetch.update(formData.get("mtType"), formData);
+        if(success){
             select.dispatchEvent(new Event("dataload"));
             myModal.hide();
         }
     });
-    delBtn.addEventListener("click", async (e) => {
+    delBtn.addEventListener("click", async (e)=>{
         let mtType = updateForm.mtType.value;
-        let success = await mbtiFetch.delete(mtType);
-        if (success) {
+        let {success} = await mbtiFetch.delete(mtType);
+        if(success){
             select.dispatchEvent(new Event("dataload"));
             myModal.hide();
         }
     });
 
-    insertForm.addEventListener("submit", async (e) => {
+    insertForm.addEventListener("submit", async (e)=>{
         e.preventDefault();
         let formData = new FormData(e.target);
         let mbti = await mbtiFetch.insert(formData);
