@@ -43,7 +43,9 @@
 		case06 : <a>핸들러 메소드에서 request parameter 처리 : @RequestParam, Command Object</a>
 	</li>
 	<li>
-		case07 : <a>form UI 구성과 데이터 바인딩(Command Object 의 활용)</a>
+		case07 : <a>form UI 구성과 데이터 바인딩(Command Object 의 활용)
+				@ModelAttribute, @Valid / @Validated == > form custom tag(modelAttribute, form: errors)
+				</a>
 
 
 	</li>
@@ -58,7 +60,17 @@
 
 	</li>
 	<li>
-		case10 : <a>파일 핸들링(업다운로드)</a>
+		case10 : <a>파일 핸들링(업다운로드)
+			file upload
+			MultipartFilter : request를 wrapper request(MultipartHttpServletRequest)로 변환
+			파일 part 표현 객체 : Part / FileItem --> MultipartFile, @RequestPart, command object
+			file download
+			content-disposition : [inline / attachment;filename="인코딩된 파일명"]
+			content-length : body length (file size)
+			ResponseEntity를 사용하는 케이스 : 직관적인 형태의 simple 다운로드 처리
+			DownloadView를 사용하는 케이스 : MVC 패턴을 기반으로 한 책임 분리 - BeanNameViewResolver가 필요하게 됨
+
+		</a>
 	</li>
 </ul>
 </body>

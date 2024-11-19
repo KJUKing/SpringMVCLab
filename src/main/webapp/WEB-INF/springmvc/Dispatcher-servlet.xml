@@ -13,7 +13,9 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+<!--    WAS가 가진 DefaultServlet으로 처리하던 정적 자원에 대한 요청을 대신 처리함
+            Simple Handler mapping등록-->
+    <mvc:resources location="/resources/" mapping="/resources/**" cache-period="0" />
 
 <!--    HandlerMapping, HandlerAdapter, Validator를 자동 등록함-->
     <mvc:annotation-driven>
@@ -21,9 +23,11 @@
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <constructor-arg name="objectMapper" ref="objectMapper" />
             </bean>
+            <bean class="kr.or.ddit.case10.view.DownloadView" id="downloadView" />
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+<!--    Json 변환시 사용할 ObjectMapper 설정-->
     <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean" id="objectMapper">
         <property name="featuresToDisable">
             <array>
@@ -39,12 +43,17 @@
         <mvc:definitions location="/WEB-INF/tiles/*-definitions.xml"/>
     </mvc:tiles-configurer>
     <mvc:view-resolvers>
+<!--        accept request header를 기준으로 response content를 협상하는 전략-->
         <mvc:content-negotiation>
             <mvc:default-views>
                 <ref bean="jsonView"/>
             </mvc:default-views>
         </mvc:content-negotiation>
+<!--        lvn == bean id -->
+        <mvc:bean-name />
+<!--        lvn == definition name-->
         <mvc:tiles/>
+<!--        lvn == prefix + lvn + suffix 경로에 해당하는 싱글 jsp로 응답 전송-->
         <mvc:jsp prefix="/WEB-INF/views" suffix=".jsp"/>
     </mvc:view-resolvers>
 </beans>
